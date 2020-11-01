@@ -1,5 +1,7 @@
 package pl.bzieja.fem;
 
+import pl.bzieja.fem.mathlogic.GaussIntegration;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -9,5 +11,8 @@ public class Main {
         grid.fillGrid(globalData);
         grid.validateElement(12);
 
+        //debugging Gauss Integration
+        //GaussIntegration gaussIntegration = new GaussIntegration(-1, 1, 2);
+        //gaussIntegration.calculate();
     }
 }
