@@ -2,35 +2,40 @@ package pl.bzieja.fem;
 
 public class Jacobian {
 
-    double derivativeXByXi;
-    double derivativeXByEta;
-    double derivativeYByXi;
-    double derivativeYByEta;
+    double[] dXByDXi; //for each integration point //////////////////////////////////////////
+    double[] dXByDEta; //for each integration point
+    double[] dYByDXi; //for each integration point
+    double[] dYByDEta; //for each integration point
     double[][][] jacobianMatrix; //[integration point] -> jacobian[][]
     double[][][] invertedJacobianMatrix; //[integration point] -> invertedJacobian[][]
     double[] jacobianDeterminantsMatrix; //[integration point] -> value
 
     //only for one element and its each integration point
-    public Jacobian (Element element, UniversalElement universalElement, int pc) {
+    public Jacobian (Element element, UniversalElement universalElement) {
 
         this.jacobianMatrix = new double[universalElement.getNumberOfAllIntegrationPoints()][2][2];
+        this.dXByDXi = new double[universalElement.getNumberOfAllIntegrationPoints()];
+        this.dXByDEta = new double[universalElement.getNumberOfAllIntegrationPoints()];
+        this.dYByDXi = new double[universalElement.getNumberOfAllIntegrationPoints()];
+        this.dYByDEta = new double[universalElement.getNumberOfAllIntegrationPoints()];
+
         for (int i = 0; i < universalElement.getNumberOfAllIntegrationPoints(); i++) {
-            derivativeXByXi = 0;
-            derivativeXByEta = 0;
-            derivativeYByXi = 0;
-            derivativeYByEta = 0;
+            dXByDXi[i] = 0;
+            dXByDEta[i] = 0;
+            dYByDXi[i] = 0;
+            dYByDEta[i] = 0;
 
             for (int j = 0; j < 4; j++) { //because we have 4 apexes (and because of that we have 4 shape functions)
-                derivativeXByXi += universalElement.getDerivativesOfShapesFunctionsByXi()[pc][j] * element.getID()[j].getX();
-                derivativeXByEta += universalElement.getDerivativesOfShapesFunctionsByEta()[pc][j] * element.getID()[j].getX();
-                derivativeYByXi += universalElement.getDerivativesOfShapesFunctionsByXi()[pc][j] * element.getID()[j].getY();
-                derivativeYByEta += universalElement.getDerivativesOfShapesFunctionsByEta()[pc][j] * element.getID()[j].getY();
+                dXByDXi[i] += universalElement.getdNByDXi()[i][j] * element.getID()[j].getX();
+                dXByDEta[i] += universalElement.getdNByDEta()[i][j] * element.getID()[j].getX();
+                dYByDXi[i] += universalElement.getdNByDXi()[i][j] * element.getID()[j].getY();
+                dYByDEta[i] += universalElement.getdNByDEta()[i][j] * element.getID()[j].getY();
             }
 
-            jacobianMatrix[i][0][0] = derivativeXByXi;
-            jacobianMatrix[i][0][1] = derivativeYByXi;
-            jacobianMatrix[i][1][0] = derivativeXByEta;
-            jacobianMatrix[i][1][1] = derivativeYByEta;
+            jacobianMatrix[i][0][0] = dXByDXi[i];
+            jacobianMatrix[i][0][1] = dYByDXi[i];
+            jacobianMatrix[i][1][0] = dXByDEta[i];
+            jacobianMatrix[i][1][1] = dYByDEta[i];
 
         }
 
@@ -57,4 +62,15 @@ public class Jacobian {
         }
     }
 
+    public double[][][] getJacobianMatrix() {
+        return jacobianMatrix;
+    }
+
+    public double[][][] getInvertedJacobianMatrix() {
+        return invertedJacobianMatrix;
+    }
+
+    public double[] getJacobianDeterminantsMatrix() {
+        return jacobianDeterminantsMatrix;
+    }
 }

@@ -2,20 +2,19 @@ package pl.bzieja.fem;
 
 public class UniversalElement {
 
-    private int numberOfIntegrationPoints;
+    private final int numberOfIntegrationPoints;
 
     private double[] integrationPointsXi;
     private double[] integrationPointsEta;
     private double[] weightsOfIntegrationPoints;
 
-    private final double [][] derivativesOfShapesFunctionsByXi;
-    private final double [][] derivativesOfShapesFunctionsByEta;
-
+    private final double [][] dNByDXi;
+    private final double [][] dNByDEta;
 
     public UniversalElement(int numberOfIntegrationPoints) {
         this.numberOfIntegrationPoints = numberOfIntegrationPoints;
-        this.derivativesOfShapesFunctionsByXi = new double[numberOfIntegrationPoints * numberOfIntegrationPoints][4];
-        this.derivativesOfShapesFunctionsByEta = new double[numberOfIntegrationPoints * numberOfIntegrationPoints][4];
+        this.dNByDXi = new double[numberOfIntegrationPoints * numberOfIntegrationPoints][4];
+        this.dNByDEta = new double[numberOfIntegrationPoints * numberOfIntegrationPoints][4];
 
         if (numberOfIntegrationPoints == 2) {
             this.integrationPointsXi = new double[4];
@@ -71,24 +70,24 @@ public class UniversalElement {
         int numberOfRowsInMatrix = numberOfIntegrationPoints * numberOfIntegrationPoints; //each integration point is a row
 
         for (int i = 0; i < numberOfRowsInMatrix; i++) {
-            derivativesOfShapesFunctionsByXi[i][0] = -0.25 * (1 - integrationPointsEta[i]);
-            derivativesOfShapesFunctionsByXi[i][1] =  0.25 * (1 - integrationPointsEta[i]);
-            derivativesOfShapesFunctionsByXi[i][2] =  0.25 * (1 + integrationPointsEta[i]);
-            derivativesOfShapesFunctionsByXi[i][3] = -0.25 * (1 + integrationPointsEta[i]);
+            dNByDXi[i][0] = -0.25 * (1 - integrationPointsEta[i]);
+            dNByDXi[i][1] =  0.25 * (1 - integrationPointsEta[i]);
+            dNByDXi[i][2] =  0.25 * (1 + integrationPointsEta[i]);
+            dNByDXi[i][3] = -0.25 * (1 + integrationPointsEta[i]);
 
-            derivativesOfShapesFunctionsByEta[i][0] = -0.25 * (1 - integrationPointsXi[i]);
-            derivativesOfShapesFunctionsByEta[i][1] = -0.25 * (1 + integrationPointsXi[i]);
-            derivativesOfShapesFunctionsByEta[i][2] =  0.25 * (1 + integrationPointsXi[i]);
-            derivativesOfShapesFunctionsByEta[i][3] =  0.25 * (1 - integrationPointsXi[i]);
+            dNByDEta[i][0] = -0.25 * (1 - integrationPointsXi[i]);
+            dNByDEta[i][1] = -0.25 * (1 + integrationPointsXi[i]);
+            dNByDEta[i][2] =  0.25 * (1 + integrationPointsXi[i]);
+            dNByDEta[i][3] =  0.25 * (1 - integrationPointsXi[i]);
         }
     }
 
-    public double[][] getDerivativesOfShapesFunctionsByXi() {
-        return derivativesOfShapesFunctionsByXi;
+    public double[][] getdNByDXi() {
+        return dNByDXi;
     }
 
-    public double[][] getDerivativesOfShapesFunctionsByEta() {
-        return derivativesOfShapesFunctionsByEta;
+    public double[][] getdNByDEta() {
+        return dNByDEta;
     }
 
     public int getNumberOfAllIntegrationPoints() {
@@ -97,6 +96,10 @@ public class UniversalElement {
 
     public int getNumberOfIntegrationPoints() {
         return numberOfIntegrationPoints;
+    }
+
+    public double[] getWeightsOfIntegrationPoints() {
+        return weightsOfIntegrationPoints;
     }
 
 }
