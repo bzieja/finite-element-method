@@ -55,4 +55,7 @@ public class Grid {
         System.out.printf("\n");
     }
 
+    public Element[] getElements() {
+        return Elements;
+    }
 }

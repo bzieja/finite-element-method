@@ -3,16 +3,16 @@ package pl.bzieja.fem;
 import pl.bzieja.fem.mathlogic.MatrixOperations;
 
 public class MatrixH {
-    double[][] dNByDX;
-    double[][] dNByDY;
-    double[][][] matrixH; //[integration points] -> matrixH[4][4]
-    double k = 30;
+    private double[][] dNByDX;
+    private double[][] dNByDY;
+    private double[][] localMatrixH; //[integration points] -> matrixH[4][4]
+    private double k = 30;
 
     //for one element and its each integration point
     public MatrixH(Jacobian jacobian, UniversalElement universalElement) {
         dNByDX = new double[universalElement.getNumberOfAllIntegrationPoints()][4];
         dNByDY = new double[universalElement.getNumberOfAllIntegrationPoints()][4];
-        matrixH = new double[universalElement.getNumberOfAllIntegrationPoints()][4][4];
+        localMatrixH = new double[4][4];
 
 
         for (int i = 0; i < universalElement.getNumberOfAllIntegrationPoints(); i++) {
@@ -38,26 +38,22 @@ public class MatrixH {
 
         }
 
-        //calculate H matrices. We want to obtain 4x4 H Matrix
-        for (int i = 0; i < 4; i++) {
-            double[][][] componentMatricesH = new double[4][4][4];
+        //calculate 4x4 H[i] Matrix for each integration point
+        for (int i = 0; i < universalElement.getNumberOfAllIntegrationPoints(); i++) {
+            double[][][] componentMatricesH = new double[universalElement.getNumberOfAllIntegrationPoints()][4][4]; //for debugging only
 
-            for (int j = 0; j < 4; j++) {
-                double[][] currentDNByDXVector = MatrixOperations.getVectorFromMatrix(dNByDX, j);
-                double[][] currentDNByDYVector = MatrixOperations.getVectorFromMatrix(dNByDY, j);
+            double[][] currentDNByDXVector = MatrixOperations.getRowAsHorizontalVectorFromMatrix(dNByDX, i);
+            double[][] currentDNByDYVector = MatrixOperations.getRowAsHorizontalVectorFromMatrix(dNByDY, i);
 
-                double[][] dNByDX_dNByDXT = MatrixOperations.multiplyMatrices(currentDNByDXVector, MatrixOperations.transposeVector(currentDNByDXVector));
-                double[][] dNByDY_dNByDYT = MatrixOperations.multiplyMatrices(currentDNByDYVector, MatrixOperations.transposeVector(currentDNByDYVector));
+            double[][] dNByDX_dNByDXT = MatrixOperations.multiplyMatrices(MatrixOperations.transposeVector(currentDNByDXVector), currentDNByDXVector);
+            double[][] dNByDY_dNByDYT = MatrixOperations.multiplyMatrices(MatrixOperations.transposeVector(currentDNByDYVector), currentDNByDYVector);
 
-                componentMatricesH[j] = MatrixOperations.multiplyMatrixByConstant(MatrixOperations.sumMatrices(dNByDX_dNByDXT, dNByDY_dNByDYT), k * jacobian.getJacobianDeterminantsMatrix()[i] * universalElement.getWeightsOfIntegrationPoints()[i % universalElement.getNumberOfIntegrationPoints()]);
-                matrixH[i] = MatrixOperations.sumMatrices(matrixH[i], componentMatricesH[j]);
-            }
+            componentMatricesH[i] = MatrixOperations.multiplyMatrixByConstant(MatrixOperations.sumMatrices(dNByDX_dNByDXT, dNByDY_dNByDYT), k * jacobian.getJacobianDeterminantsMatrix()[i] * universalElement.getWeightsOfIntegrationPoints()[i % universalElement.getNumberOfIntegrationPoints()]);
+            localMatrixH = MatrixOperations.sumMatrices(localMatrixH, componentMatricesH[i]);
         }
-
-
-
-
     }
 
-
+    public double[][] getLocalMatrixH() {
+        return localMatrixH;
+    }
 }

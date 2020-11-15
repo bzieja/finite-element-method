@@ -32,22 +32,22 @@ public class MatrixOperations {
         return result;
     }
 
-    public static double[][] getVectorFromMatrix(double[][] matrix, int column) {
+    public static double[][] getRowAsHorizontalVectorFromMatrix(double[][] matrix, int row) {
 
-        double[][] vector = new double[matrix.length][1];
+        double[][] vector = new double[1][matrix[0].length];
 
-        for (int i = 0; i < matrix.length; i++) {
-            vector[i][0] = matrix[i][column];
+        for (int i = 0; i < matrix[0].length; i++) {
+            vector[0][i] = matrix[row][i];
         }
 
         return vector;
     }
 
     public static double[][] transposeVector(double[][] vector) {
-        double[][] transposedVector = new double[1][vector.length];
+        double[][] transposedVector = new double[vector[0].length][1];
 
-        for (int i = 0; i < vector.length; i++) {
-            transposedVector[0][i] = vector[i][0];
+        for (int i = 0; i < vector[0].length; i++) {
+            transposedVector[i][0] = vector[0][i];
         }
 
         return  transposedVector;
