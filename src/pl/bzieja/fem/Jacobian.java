@@ -2,7 +2,7 @@ package pl.bzieja.fem;
 
 public class Jacobian {
 
-    double[] dXByDXi; //for each integration point //////////////////////////////////////////
+    double[] dXByDXi; //for each integration point
     double[] dXByDEta; //for each integration point
     double[] dYByDXi; //for each integration point
     double[] dYByDEta; //for each integration point

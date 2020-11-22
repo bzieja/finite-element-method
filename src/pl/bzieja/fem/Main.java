@@ -12,17 +12,12 @@ public class Main {
         grid.fillGrid(globalData);
         //grid.validateElement(12);
 
+
         UniversalElement universalElement = new UniversalElement(2);
 
-        double[][] globalH = new double[4][4];
-        for (int i = 0; i < globalData.getNumberOfElements(); i++) {
-            Jacobian jacobian = new Jacobian(grid.getElements()[i], universalElement);
-            MatrixH matrixH = new MatrixH(jacobian, universalElement);
+        SOE soe = new SOE(grid, globalData, universalElement);
+        soe.printMatrixHGlobal();
 
-            globalH = MatrixOperations.sumMatrices(globalH, matrixH.getLocalMatrixH());
-        } 
-
-        //System.out.print("End");
 
         /////////// debug for given point ////////////
         /*

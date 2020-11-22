@@ -6,7 +6,7 @@ public class MatrixH {
     private double[][] dNByDX;
     private double[][] dNByDY;
     private double[][] localMatrixH; //[integration points] -> matrixH[4][4]
-    private double k = 30;
+    private double k = 25;
 
     //for one element and its each integration point
     public MatrixH(Jacobian jacobian, UniversalElement universalElement) {
@@ -50,10 +50,17 @@ public class MatrixH {
 
             componentMatricesH[i] = MatrixOperations.multiplyMatrixByConstant(MatrixOperations.sumMatrices(dNByDX_dNByDXT, dNByDY_dNByDYT), k * jacobian.getJacobianDeterminantsMatrix()[i] * universalElement.getWeightsOfIntegrationPoints()[i % universalElement.getNumberOfIntegrationPoints()]);
             localMatrixH = MatrixOperations.sumMatrices(localMatrixH, componentMatricesH[i]);
+
+
         }
+
+
+
     }
 
     public double[][] getLocalMatrixH() {
         return localMatrixH;
     }
+
+    //for debbug
 }
