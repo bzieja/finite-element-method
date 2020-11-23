@@ -24,7 +24,7 @@ public class SOE {
 
         for (int i = 0; i < globalData.getNumberOfElements(); i++) {
             Jacobian jacobian = new Jacobian(grid.getElements()[i], universalElement);
-            MatrixH matrixH = new MatrixH(jacobian, universalElement);
+            MatrixH matrixH = new MatrixH(jacobian, universalElement, globalData.getK());
             grid.getElements()[i].setMatrixH(matrixH.getLocalMatrixH());
         }
 
@@ -35,7 +35,6 @@ public class SOE {
                 }
             }
         }
-
     }
 
     public void printMatrixHGlobal() {

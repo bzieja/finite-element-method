@@ -9,11 +9,9 @@ public class Main {
         String pathToDataFile = "data.txt";
         GlobalData globalData = new GlobalData(pathToDataFile);
         Grid grid = new Grid(globalData);
+
         grid.fillGrid(globalData);
-        //grid.validateElement(12);
-
-
-        UniversalElement universalElement = new UniversalElement(2);
+        UniversalElement universalElement = new UniversalElement(globalData.getNumberOfIntegrationPoints());
 
         SOE soe = new SOE(grid, globalData, universalElement);
         soe.printMatrixHGlobal();

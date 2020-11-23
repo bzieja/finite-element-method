@@ -6,14 +6,14 @@ public class MatrixH {
     private double[][] dNByDX;
     private double[][] dNByDY;
     private double[][] localMatrixH; //[integration points] -> matrixH[4][4]
-    private double k = 25;
+    private double k;
 
     //for one element and its each integration point
-    public MatrixH(Jacobian jacobian, UniversalElement universalElement) {
+    public MatrixH(Jacobian jacobian, UniversalElement universalElement, double k) {
         dNByDX = new double[universalElement.getNumberOfAllIntegrationPoints()][4];
         dNByDY = new double[universalElement.getNumberOfAllIntegrationPoints()][4];
         localMatrixH = new double[4][4];
-
+        this.k = k;
 
         for (int i = 0; i < universalElement.getNumberOfAllIntegrationPoints(); i++) {
 
@@ -48,19 +48,14 @@ public class MatrixH {
             double[][] dNByDX_dNByDXT = MatrixOperations.multiplyMatrices(MatrixOperations.transposeVector(currentDNByDXVector), currentDNByDXVector);
             double[][] dNByDY_dNByDYT = MatrixOperations.multiplyMatrices(MatrixOperations.transposeVector(currentDNByDYVector), currentDNByDYVector);
 
-            componentMatricesH[i] = MatrixOperations.multiplyMatrixByConstant(MatrixOperations.sumMatrices(dNByDX_dNByDXT, dNByDY_dNByDYT), k * jacobian.getJacobianDeterminantsMatrix()[i] * universalElement.getWeightsOfIntegrationPoints()[i % universalElement.getNumberOfIntegrationPoints()]);
+            //componentMatricesH[i] = MatrixOperations.multiplyMatrixByConstant(MatrixOperations.sumMatrices(dNByDX_dNByDXT, dNByDY_dNByDYT), k * jacobian.getJacobianDeterminantsMatrix()[i] * universalElement.getWeightsOfIntegrationPoints()[i % universalElement.getNumberOfIntegrationPoints()]);
+            componentMatricesH[i] = MatrixOperations.multiplyMatrixByConstant(MatrixOperations.sumMatrices(dNByDX_dNByDXT, dNByDY_dNByDYT), this.k * jacobian.getJacobianDeterminantsMatrix()[i] * universalElement.getWeightsOfIntegrationPoints()[i % universalElement.getNumberOfIntegrationPoints()] * universalElement.getWeightsOfIntegrationPoints()[i / universalElement.getNumberOfIntegrationPoints()]);
             localMatrixH = MatrixOperations.sumMatrices(localMatrixH, componentMatricesH[i]);
-
-
         }
-
-
-
     }
 
     public double[][] getLocalMatrixH() {
         return localMatrixH;
     }
 
-    //for debbug
 }

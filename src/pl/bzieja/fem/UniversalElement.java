@@ -17,6 +17,8 @@ public class UniversalElement {
         this.dNByDEta = new double[numberOfIntegrationPoints * numberOfIntegrationPoints][4];
 
         if (numberOfIntegrationPoints == 2) {
+            System.out.println("Number of Integration Points: " + numberOfIntegrationPoints);
+
             this.integrationPointsXi = new double[4];
             this.integrationPointsEta = new double[4];
             this.weightsOfIntegrationPoints = new double[] {1.0, 1.0};
@@ -32,10 +34,13 @@ public class UniversalElement {
             this.integrationPointsEta[3] = 1.0 / Math.sqrt(3.0);
 
             calculateDerivativesOfShapeFunctionAfterXiAndEta();
+
         } else if (numberOfIntegrationPoints == 3) {
+            System.out.println("Number of Integration Points: " + numberOfIntegrationPoints);
 
             this.integrationPointsXi = new double[9];
             this.integrationPointsEta = new double[9];
+            this.weightsOfIntegrationPoints = new double[] {5.0 / 9.0, 8.0 / 9.0, 5.0 / 9.0};
 
             this.integrationPointsXi[0] = -(Math.sqrt(3.0 / 5.0));
             this.integrationPointsXi[1] = 0.0;
@@ -57,9 +62,64 @@ public class UniversalElement {
             this.integrationPointsEta[7] = Math.sqrt(3.0 / 5.0);
             this.integrationPointsEta[8] = Math.sqrt(3.0 / 5.0);
 
-            this.weightsOfIntegrationPoints = new double[] {5.0 / 9.0, 8.0 / 9.0, 5.0 / 9.0};
+/*
+            this.weightsOfIntegrationPoints = new double[] {5.0 / 9.0, 8.0 / 9.0, 5.0 / 9.0,
+                    5.0 / 9.0, 8.0 / 9.0, 5.0 / 9.0,
+                    5.0 / 9.0, 8.0 / 9.0, 5.0 / 9.0};
+*/
 
             calculateDerivativesOfShapeFunctionAfterXiAndEta();
+
+        } else if (numberOfIntegrationPoints == 4){
+            System.out.println("Number of Integration Points: " + numberOfIntegrationPoints);
+
+            this.integrationPointsXi = new double[16];
+            this.integrationPointsEta = new double[16];
+            this.weightsOfIntegrationPoints = new double[] {(18.0 - Math.sqrt(30.0)) / 36.0, (18.0 + Math.sqrt(30.0)) / 36.0, (18.0 + Math.sqrt(30.0)) / 36.0, (18.0 - Math.sqrt(30.0)) / 36.0,};
+
+            this.integrationPointsXi[0] = -Math.sqrt(3.0 / 7.0 + (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
+            this.integrationPointsXi[1] = -Math.sqrt(3.0 / 7.0 - (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
+            this.integrationPointsXi[2] = Math.sqrt(3.0 / 7.0 - (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
+            this.integrationPointsXi[3] = Math.sqrt(3.0 / 7.0 + (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
+
+            this.integrationPointsXi[4] = -Math.sqrt(3.0 / 7.0 + (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
+            this.integrationPointsXi[5] = -Math.sqrt(3.0 / 7.0 - (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
+            this.integrationPointsXi[6] = Math.sqrt(3.0 / 7.0 - (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
+            this.integrationPointsXi[7] = Math.sqrt(3.0 / 7.0 + (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
+
+            this.integrationPointsXi[8] = -Math.sqrt(3.0 / 7.0 + (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
+            this.integrationPointsXi[9] = -Math.sqrt(3.0 / 7.0 - (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
+            this.integrationPointsXi[10] = Math.sqrt(3.0 / 7.0 - (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
+            this.integrationPointsXi[11] = Math.sqrt(3.0 / 7.0 + (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
+
+            this.integrationPointsXi[12] = -Math.sqrt(3.0 / 7.0 + (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
+            this.integrationPointsXi[13] = -Math.sqrt(3.0 / 7.0 - (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
+            this.integrationPointsXi[14] = Math.sqrt(3.0 / 7.0 - (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
+            this.integrationPointsXi[15] = Math.sqrt(3.0 / 7.0 + (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
+
+            ////////////////
+            this.integrationPointsEta[0] = -Math.sqrt(3.0 / 7.0 + (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
+            this.integrationPointsEta[1] = -Math.sqrt(3.0 / 7.0 + (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
+            this.integrationPointsEta[2] = -Math.sqrt(3.0 / 7.0 + (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
+            this.integrationPointsEta[3] = -Math.sqrt(3.0 / 7.0 + (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
+
+            this.integrationPointsEta[4] = -Math.sqrt(3.0 / 7.0 - (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
+            this.integrationPointsEta[5] = -Math.sqrt(3.0 / 7.0 - (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
+            this.integrationPointsEta[6] = -Math.sqrt(3.0 / 7.0 - (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
+            this.integrationPointsEta[7] = -Math.sqrt(3.0 / 7.0 - (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
+
+            this.integrationPointsEta[8] = Math.sqrt(3.0 / 7.0 - (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
+            this.integrationPointsEta[9] = Math.sqrt(3.0 / 7.0 - (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
+            this.integrationPointsEta[10] = Math.sqrt(3.0 / 7.0 - (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
+            this.integrationPointsEta[11] = Math.sqrt(3.0 / 7.0 - (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
+
+            this.integrationPointsEta[12] = Math.sqrt(3.0 / 7.0 + (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
+            this.integrationPointsEta[13] = Math.sqrt(3.0 / 7.0 + (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
+            this.integrationPointsEta[14] = Math.sqrt(3.0 / 7.0 + (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
+            this.integrationPointsEta[15] = Math.sqrt(3.0 / 7.0 + (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
+
+            calculateDerivativesOfShapeFunctionAfterXiAndEta();
+
         } else {
             System.out.println("Wrong number of integration points!");
         }
