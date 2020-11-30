@@ -1,7 +1,6 @@
 package pl.bzieja.fem;
 
-import pl.bzieja.fem.mathlogic.GaussIntegration;
-import pl.bzieja.fem.mathlogic.MatrixOperations;
+import pl.bzieja.fem.gridlogic.Grid;
 
 public class Main {
 
@@ -15,7 +14,7 @@ public class Main {
 
         SOE soe = new SOE(grid, globalData, universalElement);
         soe.printMatrixHGlobal();
-
+        soe.printMatrixCGlobal();
 
         /////////// debug for given point ////////////
         /*

@@ -1,4 +1,6 @@
-package pl.bzieja.fem;
+package pl.bzieja.fem.gridlogic;
+
+import pl.bzieja.fem.GlobalData;
 
 public class Grid {
     int numberOfNodes;

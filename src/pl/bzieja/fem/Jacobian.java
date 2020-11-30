@@ -1,5 +1,7 @@
 package pl.bzieja.fem;
 
+import pl.bzieja.fem.gridlogic.Element;
+
 public class Jacobian {
 
     double[] dXByDXi; //for each integration point

@@ -1,4 +1,4 @@
-package pl.bzieja.fem;
+package pl.bzieja.fem.gridlogic;
 
 public class Node {
     static private int nextNodeNumber = 1;

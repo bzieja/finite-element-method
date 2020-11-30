@@ -1,8 +1,11 @@
-package pl.bzieja.fem;
+package pl.bzieja.fem.gridlogic;
+
+import pl.bzieja.fem.gridlogic.Node;
 
 public class Element {
     private Node[] ID; // Nodes included in finite Element
     private double[][] matrixH;
+    private double[][] matrixC;
 
     /*
      *   ID4         ID3
@@ -28,5 +31,13 @@ public class Element {
 
     public double[][] getMatrixH() {
         return matrixH;
+    }
+
+    public void setMatrixC(double[][] matrixC) {
+        this.matrixC = matrixC;
+    }
+
+    public double[][] getMatrixC() {
+        return matrixC;
     }
 }

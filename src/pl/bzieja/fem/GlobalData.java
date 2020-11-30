@@ -12,13 +12,15 @@ public class GlobalData {
     private final int numberOfNodesAtWidth;
     private final double k;
     private final int numberOfIntegrationPoints;
+    private final double c;
+    private final double ro;
 
 
     private final int numberOfNodes;
     private final int numberOfElements;
 
     public GlobalData(String pathToFile) {
-        double[] inputData = new double[6];
+        double[] inputData = new double[8];
 
         try (Scanner reader = new Scanner(new File(pathToFile))) {
             for (int i = 0; reader.hasNextLine(); i++) {
@@ -33,6 +35,8 @@ public class GlobalData {
         this.numberOfNodesAtWidth = (int) inputData[3];
         this.k = inputData[4];
         this.numberOfIntegrationPoints = (int) inputData[5];
+        this.c = inputData[6];
+        this.ro = inputData[7];
 
         this.numberOfNodes = numberOfNodesAtHeight * numberOfNodesAtWidth;
         this.numberOfElements = (numberOfNodesAtHeight - 1) * (numberOfNodesAtWidth - 1);
@@ -68,5 +72,13 @@ public class GlobalData {
 
     public int getNumberOfIntegrationPoints() {
         return numberOfIntegrationPoints;
+    }
+
+    public double getC() {
+        return c;
+    }
+
+    public double getRo() {
+        return ro;
     }
 }

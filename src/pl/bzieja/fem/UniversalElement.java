@@ -11,10 +11,13 @@ public class UniversalElement {
     private final double [][] dNByDXi;
     private final double [][] dNByDEta;
 
+    private final double [][] N;
+
     public UniversalElement(int numberOfIntegrationPoints) {
         this.numberOfIntegrationPoints = numberOfIntegrationPoints;
         this.dNByDXi = new double[numberOfIntegrationPoints * numberOfIntegrationPoints][4];
         this.dNByDEta = new double[numberOfIntegrationPoints * numberOfIntegrationPoints][4];
+        this.N = new double[numberOfIntegrationPoints * numberOfIntegrationPoints][4];
 
         if (numberOfIntegrationPoints == 2) {
             System.out.println("Number of Integration Points: " + numberOfIntegrationPoints);
@@ -34,6 +37,7 @@ public class UniversalElement {
             this.integrationPointsEta[3] = 1.0 / Math.sqrt(3.0);
 
             calculateDerivativesOfShapeFunctionAfterXiAndEta();
+            calculateNMatrix();
 
         } else if (numberOfIntegrationPoints == 3) {
             System.out.println("Number of Integration Points: " + numberOfIntegrationPoints);
@@ -69,6 +73,7 @@ public class UniversalElement {
 */
 
             calculateDerivativesOfShapeFunctionAfterXiAndEta();
+            calculateNMatrix();
 
         } else if (numberOfIntegrationPoints == 4){
             System.out.println("Number of Integration Points: " + numberOfIntegrationPoints);
@@ -119,6 +124,7 @@ public class UniversalElement {
             this.integrationPointsEta[15] = Math.sqrt(3.0 / 7.0 + (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
 
             calculateDerivativesOfShapeFunctionAfterXiAndEta();
+            calculateNMatrix();
 
         } else {
             System.out.println("Wrong number of integration points!");
@@ -142,6 +148,19 @@ public class UniversalElement {
         }
     }
 
+    private void calculateNMatrix() {
+
+        int numberOfRowsInMatrix = numberOfIntegrationPoints * numberOfIntegrationPoints; //each integration point is a row
+
+        for (int i = 0; i < numberOfRowsInMatrix; i++) {
+            N[i][0] = 0.25 * (1 - integrationPointsEta[i]) * (1 - integrationPointsXi[i]);
+            N[i][1] = 0.25 * (1 + integrationPointsEta[i]) * (1 - integrationPointsXi[i]);
+            N[i][2] = 0.25 * (1 + integrationPointsEta[i]) * (1 + integrationPointsXi[i]);
+            N[i][3] = 0.25 * (1 - integrationPointsEta[i]) * (1 + integrationPointsXi[i]);
+        }
+
+    }
+
     public double[][] getdNByDXi() {
         return dNByDXi;
     }
@@ -162,4 +181,7 @@ public class UniversalElement {
         return weightsOfIntegrationPoints;
     }
 
+    public double[][] getN() {
+        return N;
+    }
 }
