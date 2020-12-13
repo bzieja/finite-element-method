@@ -22,8 +22,9 @@ public class Grid {
         //fill Nodes
         for (int i = 0; i < globalData.getNumberOfNodesAtWidth(); i++) {
             for (int j = 0; j < globalData.getNumberOfNodesAtHeight(); j++) {
-                this.Nodes[i * globalData.getNumberOfNodesAtHeight() + j] =
-                        new Node(i * dx, j * dy);
+
+                //boundary condition logic
+                this.Nodes[i * globalData.getNumberOfNodesAtHeight() + j] = new Node(i * dx, j * dy, Node.isBoundaryNode(i * dx, j * dy, globalData));
             }
         }
 
@@ -42,6 +43,8 @@ public class Grid {
             Elements[i] = new Element(Nodes[ID1], Nodes[ID2], Nodes[ID3], Nodes[ID4]);
         }
     }
+
+
 
     public void validateElement (int elementID) {
         System.out.println("Element's ID: " + elementID);

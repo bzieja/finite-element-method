@@ -6,21 +6,23 @@ import java.util.Scanner;
 
 public class GlobalData {
     //read:
-    private final double height;
-    private final double width;
-    private final int numberOfNodesAtHeight;
-    private final int numberOfNodesAtWidth;
-    private final double k;
-    private final int numberOfIntegrationPoints;
-    private final double c;
-    private final double ro;
+    private final double height;    //1
+    private final double width;     //2
+    private final int numberOfNodesAtHeight;    //3
+    private final int numberOfNodesAtWidth;     //4
+    private final double k;         //5
+    private final int numberOfIntegrationPoints;    //6
+    private final double c;         //7
+    private final double ro;        //8
+    private final double alfa;      //9
 
 
     private final int numberOfNodes;
     private final int numberOfElements;
 
     public GlobalData(String pathToFile) {
-        double[] inputData = new double[8];
+        int numberOfVariablesToRead = 9;
+        double[] inputData = new double[numberOfVariablesToRead];
 
         try (Scanner reader = new Scanner(new File(pathToFile))) {
             for (int i = 0; reader.hasNextLine(); i++) {
@@ -37,6 +39,7 @@ public class GlobalData {
         this.numberOfIntegrationPoints = (int) inputData[5];
         this.c = inputData[6];
         this.ro = inputData[7];
+        this.alfa = inputData[8];
 
         this.numberOfNodes = numberOfNodesAtHeight * numberOfNodesAtWidth;
         this.numberOfElements = (numberOfNodesAtHeight - 1) * (numberOfNodesAtWidth - 1);
@@ -80,5 +83,9 @@ public class GlobalData {
 
     public double getRo() {
         return ro;
+    }
+
+    public double getAlfa() {
+        return alfa;
     }
 }

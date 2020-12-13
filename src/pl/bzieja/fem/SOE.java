@@ -1,6 +1,7 @@
 package pl.bzieja.fem;
 
 import pl.bzieja.fem.gridlogic.Grid;
+import pl.bzieja.fem.mathlogic.MatrixOperations;
 
 public class SOE {
     //H_GLOBAL [n x n], where n = nH * nW
@@ -27,11 +28,19 @@ public class SOE {
 
     private void calculateMatrixHGlobal(){
 
-        //calculate H for each element
+        //calculate Hbc for each element
         for (int i = 0; i < globalData.getNumberOfElements(); i++) {
             Jacobian jacobian = new Jacobian(grid.getElements()[i], universalElement);
             MatrixH matrixH = new MatrixH(jacobian, universalElement, globalData.getK());
             grid.getElements()[i].setMatrixH(matrixH.getLocalMatrixH());
+
+            //check if Element has BC and if yes - count BC Matrix
+            if (grid.getElements()[i].isBoundaryElement()) {
+                MatrixBoundaryConditions matrixBoundaryConditions = new MatrixBoundaryConditions(grid.getElements()[i], universalElement, globalData.getAlfa());
+                grid.getElements()[i].setMatrixBC(matrixBoundaryConditions.getBCMatrix());
+                grid.getElements()[i].setMatrixH(MatrixOperations.sumMatrices(matrixH.getLocalMatrixH(), grid.getElements()[i].getMatrixBC()));
+            }
+
         }
 
         //aggregation
@@ -65,6 +74,7 @@ public class SOE {
     }
 
     public void printMatrixHGlobal() {
+        System.out.println("Matrix H Global:");
         for (int i = 0; i < globalData.getNumberOfNodes(); i++) {
             for (int j = 0; j < globalData.getNumberOfNodes(); j++) {
                 System.out.printf("%.4f\t\t", matrixHGlobal[i][j]);
@@ -75,6 +85,7 @@ public class SOE {
     }
 
     public void printMatrixCGlobal() {
+        System.out.println("Matrix C Global:");
         for (int i = 0; i < globalData.getNumberOfNodes(); i++) {
             for (int j = 0; j < globalData.getNumberOfNodes(); j++) {
                 System.out.printf("%.3f\t\t", matrixCGlobal[i][j]);
@@ -82,6 +93,6 @@ public class SOE {
             System.out.print("\n");
         }
         System.out.print("\n");
-    }
+    } //print for debug
 
 }

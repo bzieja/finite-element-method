@@ -8,10 +8,11 @@ public class UniversalElement {
     private double[] integrationPointsEta;
     private double[] weightsOfIntegrationPoints;
 
-    private final double [][] dNByDXi;
-    private final double [][] dNByDEta;
+    private final double[][] dNByDXi;
+    private final double[][] dNByDEta;
 
-    private final double [][] N;
+    private final double[][] N;
+
 
     public UniversalElement(int numberOfIntegrationPoints) {
         this.numberOfIntegrationPoints = numberOfIntegrationPoints;
@@ -19,8 +20,10 @@ public class UniversalElement {
         this.dNByDEta = new double[numberOfIntegrationPoints * numberOfIntegrationPoints][4];
         this.N = new double[numberOfIntegrationPoints * numberOfIntegrationPoints][4];
 
+        System.out.println("Number of Integration Points: " + numberOfIntegrationPoints); //for debug
+
         if (numberOfIntegrationPoints == 2) {
-            System.out.println("Number of Integration Points: " + numberOfIntegrationPoints);
+
 
             this.integrationPointsXi = new double[4];
             this.integrationPointsEta = new double[4];
@@ -40,7 +43,6 @@ public class UniversalElement {
             calculateNMatrix();
 
         } else if (numberOfIntegrationPoints == 3) {
-            System.out.println("Number of Integration Points: " + numberOfIntegrationPoints);
 
             this.integrationPointsXi = new double[9];
             this.integrationPointsEta = new double[9];
@@ -76,7 +78,6 @@ public class UniversalElement {
             calculateNMatrix();
 
         } else if (numberOfIntegrationPoints == 4){
-            System.out.println("Number of Integration Points: " + numberOfIntegrationPoints);
 
             this.integrationPointsXi = new double[16];
             this.integrationPointsEta = new double[16];
@@ -148,7 +149,7 @@ public class UniversalElement {
         }
     }
 
-    private void calculateNMatrix() {
+    private void calculateNMatrix() { //needed for matrix C
 
         int numberOfRowsInMatrix = numberOfIntegrationPoints * numberOfIntegrationPoints; //each integration point is a row
 
@@ -183,5 +184,13 @@ public class UniversalElement {
 
     public double[][] getN() {
         return N;
+    }
+
+    public double[] getIntegrationPointsXi() {
+        return integrationPointsXi;
+    }
+
+    public double[] getIntegrationPointsEta() {
+        return integrationPointsEta;
     }
 }

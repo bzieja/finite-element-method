@@ -16,7 +16,7 @@ public class MatrixC {
         this.ro = ro;
 
         for (int i = 0; i < universalElement.getNumberOfAllIntegrationPoints(); i++) {
-            double componentMatricesC[][][] = new double[universalElement.getNumberOfAllIntegrationPoints()][4][4]; //for debug only
+            double[][][] componentMatricesC = new double[universalElement.getNumberOfAllIntegrationPoints()][4][4]; //for debug only
 
             double[][] currentNVector = MatrixOperations.getRowAsHorizontalVectorFromMatrix(universalElement.getN(), i);
             double[][] currentNVectorT = MatrixOperations.transposeVector(currentNVector);
