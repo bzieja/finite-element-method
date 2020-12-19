@@ -15,13 +15,14 @@ public class GlobalData {
     private final double c;         //7
     private final double ro;        //8
     private final double alfa;      //9
+    private final double tAlfa;     //10
 
 
     private final int numberOfNodes;
     private final int numberOfElements;
 
     public GlobalData(String pathToFile) {
-        int numberOfVariablesToRead = 9;
+        int numberOfVariablesToRead = 10;
         double[] inputData = new double[numberOfVariablesToRead];
 
         try (Scanner reader = new Scanner(new File(pathToFile))) {
@@ -40,6 +41,7 @@ public class GlobalData {
         this.c = inputData[6];
         this.ro = inputData[7];
         this.alfa = inputData[8];
+        this.tAlfa = inputData[9];
 
         this.numberOfNodes = numberOfNodesAtHeight * numberOfNodesAtWidth;
         this.numberOfElements = (numberOfNodesAtHeight - 1) * (numberOfNodesAtWidth - 1);
@@ -87,5 +89,9 @@ public class GlobalData {
 
     public double getAlfa() {
         return alfa;
+    }
+
+    public double gettAlfa() {
+        return tAlfa;
     }
 }

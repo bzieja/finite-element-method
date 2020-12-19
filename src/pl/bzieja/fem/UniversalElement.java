@@ -20,7 +20,7 @@ public class UniversalElement {
         this.dNByDEta = new double[numberOfIntegrationPoints * numberOfIntegrationPoints][4];
         this.N = new double[numberOfIntegrationPoints * numberOfIntegrationPoints][4];
 
-        System.out.println("Number of Integration Points: " + numberOfIntegrationPoints); //for debug
+        System.out.println("Number of Integration Points: " + numberOfIntegrationPoints); //for debug ////////////////////////////////////////
 
         if (numberOfIntegrationPoints == 2) {
 

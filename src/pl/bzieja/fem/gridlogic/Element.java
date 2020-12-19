@@ -7,6 +7,7 @@ public class Element {
     private double[][] matrixH;
     private double[][] matrixC;
     private double[][] matrixBC;    //for debug, can be omitted
+    private double[][] vectorP;
 
     /*
      *   ID4         ID3
@@ -20,6 +21,7 @@ public class Element {
     public Element(Node ID1, Node ID2, Node ID3, Node ID4) {
         this.ID = new Node[] {ID1, ID2, ID3, ID4};
         this.matrixH = new double[4][4];
+        this.vectorP = new double[1][4];
     }
 
     public boolean isBoundaryElement() {
@@ -65,5 +67,13 @@ public class Element {
 
     public void setMatrixBC(double[][] matrixBC) {
         this.matrixBC = matrixBC;
+    }
+
+    public double[][] getVectorP() {
+        return vectorP;
+    }
+
+    public void setVectorP(double[][] vectorP) {
+        this.vectorP = vectorP;
     }
 }

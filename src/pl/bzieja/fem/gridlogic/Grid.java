@@ -13,6 +13,8 @@ public class Grid {
         this.numberOfElements = (globalData.getNumberOfNodesAtHeight() - 1) * (globalData.getNumberOfNodesAtWidth() - 1);
         this.Nodes = new Node[numberOfNodes];
         this.Elements = new Element[numberOfElements];
+
+        this.fillGrid(globalData);
     }
 
     public void fillGrid(GlobalData globalData) {

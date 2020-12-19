@@ -3,6 +3,8 @@ package pl.bzieja.fem;
 import pl.bzieja.fem.gridlogic.Grid;
 import pl.bzieja.fem.mathlogic.MatrixOperations;
 
+import java.util.Arrays;
+
 public class SOE {
     //H_GLOBAL [n x n], where n = nH * nW
     //C_GLOBAL [n x n]
@@ -10,25 +12,28 @@ public class SOE {
 
     double[][] matrixHGlobal;
     double[][] matrixCGlobal;
+    double[][] vectorPGlobal;
 
     Grid grid;
     GlobalData globalData;
     UniversalElement universalElement;
 
-    public SOE(Grid grid, GlobalData globalData, UniversalElement universalElement) {
+    public SOE(Grid grid, GlobalData globalData, UniversalElement universalElement)  {
         this.grid = grid;
         this.globalData = globalData;
         this.universalElement = universalElement;
         this.matrixHGlobal = new double[globalData.getNumberOfNodes()][globalData.getNumberOfNodes()];
         this.matrixCGlobal = new double[globalData.getNumberOfNodes()][globalData.getNumberOfNodes()];
+        this.vectorPGlobal = new double[1][globalData.getNumberOfNodes()];
 
         calculateMatrixHGlobal();
         calculateMatrixCGlobal();
+        calculateVectorPGlobal();
     }
 
-    private void calculateMatrixHGlobal(){
+    private void calculateMatrixHGlobal() {
 
-        //calculate Hbc for each element
+        //calculate Hlbc for each element
         for (int i = 0; i < globalData.getNumberOfElements(); i++) {
             Jacobian jacobian = new Jacobian(grid.getElements()[i], universalElement);
             MatrixH matrixH = new MatrixH(jacobian, universalElement, globalData.getK());
@@ -53,7 +58,7 @@ public class SOE {
         }
     }
 
-    private void calculateMatrixCGlobal(){
+    private void calculateMatrixCGlobal() {
 
         //calculate H for each element
         for (int i = 0; i < globalData.getNumberOfElements(); i++) {
@@ -71,6 +76,31 @@ public class SOE {
             }
         }
 
+    }
+
+    private void calculateVectorPGlobal() {
+
+        //calculate VectorP for boundary elements
+        for (int i = 0; i < globalData.getNumberOfElements(); i++) {
+
+            //check if Element has BC and if yes - count BC Matrix
+            if (grid.getElements()[i].isBoundaryElement()) {
+                VectorP vectorP = new VectorP(grid.getElements()[i], universalElement, globalData.getAlfa(), globalData.gettAlfa());
+
+                grid.getElements()[i].setVectorP(vectorP.getVectorP());
+
+                System.out.println("Element " + i + "ma vector P: " + Arrays.deepToString(grid.getElements()[i].getVectorP()));
+            }
+        }
+
+        //aggregation - MAYBE HERE BLAD
+        for (int k = 0; k < globalData.getNumberOfElements(); k++) {
+            //for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < 4; j++) {
+                    vectorPGlobal[0][grid.getElements()[k].getID()[j].getNodeID() - 1] += grid.getElements()[k].getVectorP()[0][j];
+                }
+            //}
+        }
     }
 
     public void printMatrixHGlobal() {

@@ -9,7 +9,6 @@ public class Main {
         GlobalData globalData = new GlobalData(pathToDataFile);
         Grid grid = new Grid(globalData);
 
-        grid.fillGrid(globalData);
         UniversalElement universalElement = new UniversalElement(globalData.getNumberOfIntegrationPoints());
 
         SOE soe = new SOE(grid, globalData, universalElement);
