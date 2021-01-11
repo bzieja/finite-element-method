@@ -24,10 +24,18 @@ public class MatrixOperations {
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[0].length; j++) {
                 BigDecimal temp = new BigDecimal(matrix[i][j]);
-                temp = temp.multiply(BigDecimal.valueOf(constant));
+                //temp = temp.multiply(BigDecimal.valueOf(constant));
+                temp = temp.multiply((new BigDecimal(constant)));
                 result[i][j] = temp.doubleValue();
             }
         }
+
+//        for (int i = 0; i < matrix.length; i++) {
+//            for (int j = 0; j < matrix[0].length; j++) {
+//                result[i][j] = matrix[i][j] * constant;
+//            }
+//        }
+
 
         return result;
     }

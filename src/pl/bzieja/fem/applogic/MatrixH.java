@@ -1,4 +1,4 @@
-package pl.bzieja.fem;
+package pl.bzieja.fem.applogic;
 
 import pl.bzieja.fem.mathlogic.MatrixOperations;
 
@@ -40,6 +40,7 @@ public class MatrixH {
 
         //calculate 4x4 H[i] Matrix for each integration point
         for (int i = 0; i < universalElement.getNumberOfAllIntegrationPoints(); i++) {
+            //partial results for current element's H:
             double[][][] componentMatricesH = new double[universalElement.getNumberOfAllIntegrationPoints()][4][4]; //for debugging only
 
             double[][] currentDNByDXVector = MatrixOperations.getRowAsHorizontalVectorFromMatrix(dNByDX, i);

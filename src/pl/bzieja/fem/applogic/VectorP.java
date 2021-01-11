@@ -1,12 +1,11 @@
-package pl.bzieja.fem;
+package pl.bzieja.fem.applogic;
 
 import pl.bzieja.fem.gridlogic.Element;
 import pl.bzieja.fem.gridlogic.Node;
 import pl.bzieja.fem.mathlogic.MatrixOperations;
 
-public class MatrixBoundaryConditions {
-
-    private double[][] BCMatrix;
+public class VectorP {
+    private double[][] vectorP;
 
     private int numberOfIntegrationPoints;
     private double[] integrationPointsXi;
@@ -14,13 +13,14 @@ public class MatrixBoundaryConditions {
     private double[] weightsOfIntegrationPoints;
     private double[][] N;
     double alfa;
+    double tAlfa;
     private double currentSideLength;
 
-
-    public MatrixBoundaryConditions(Element element, UniversalElement universalElement, double alfa) {
+    public VectorP(Element element, UniversalElement universalElement, double alfa, double tAlfa) {
 
         this.alfa = alfa;
-        this.BCMatrix = new double[4][4];
+        this.tAlfa = tAlfa;
+        this.vectorP = new double[1][4];
         this.numberOfIntegrationPoints = universalElement.getNumberOfIntegrationPoints();
 
 
@@ -34,7 +34,7 @@ public class MatrixBoundaryConditions {
             }
 
             calculateNMatrix();
-            calculateBCMatrix();
+            calculateVectorP();
         }
 
         //if right -> xi = 1
@@ -47,7 +47,7 @@ public class MatrixBoundaryConditions {
             }
 
             calculateNMatrix();
-            calculateBCMatrix();
+            calculateVectorP();
         }
 
         //if up -> eta = 1
@@ -60,7 +60,7 @@ public class MatrixBoundaryConditions {
             }
 
             calculateNMatrix();
-            calculateBCMatrix();
+            calculateVectorP();
         }
 
         //if left -> xi = -1
@@ -73,17 +73,17 @@ public class MatrixBoundaryConditions {
             }
 
             calculateNMatrix();
-            calculateBCMatrix();
+            calculateVectorP();
         }
-
     }
-    private void calculateIntegrationPoints( ) {
+
+    private void calculateIntegrationPoints() {
 
         if (this.numberOfIntegrationPoints == 2) {
 
             this.integrationPointsXi = new double[2];
             this.integrationPointsEta = new double[2];
-            this.weightsOfIntegrationPoints = new double[] {1.0, 1.0};
+            this.weightsOfIntegrationPoints = new double[]{1.0, 1.0};
 
             this.integrationPointsXi[0] = -(1.0 / Math.sqrt(3.0));
             this.integrationPointsXi[1] = 1.0 / Math.sqrt(3.0);
@@ -95,7 +95,7 @@ public class MatrixBoundaryConditions {
 
             this.integrationPointsXi = new double[3];
             this.integrationPointsEta = new double[3];
-            this.weightsOfIntegrationPoints = new double[] {5.0 / 9.0, 8.0 / 9.0, 5.0 / 9.0};
+            this.weightsOfIntegrationPoints = new double[]{5.0 / 9.0, 8.0 / 9.0, 5.0 / 9.0};
 
             this.integrationPointsXi[0] = -(Math.sqrt(3.0 / 5.0));
             this.integrationPointsXi[1] = 0.0;
@@ -105,21 +105,21 @@ public class MatrixBoundaryConditions {
             this.integrationPointsEta[1] = 0.0;
             this.integrationPointsEta[2] = Math.sqrt(3.0 / 5.0);
 
-        } else if (numberOfIntegrationPoints == 4){
+        } else if (numberOfIntegrationPoints == 4) {
 
             this.integrationPointsXi = new double[4];
             this.integrationPointsEta = new double[4];
-            this.weightsOfIntegrationPoints = new double[] {(18.0 - Math.sqrt(30.0)) / 36.0, (18.0 + Math.sqrt(30.0)) / 36.0, (18.0 + Math.sqrt(30.0)) / 36.0, (18.0 - Math.sqrt(30.0)) / 36.0,};
+            this.weightsOfIntegrationPoints = new double[]{(18.0 - Math.sqrt(30.0)) / 36.0, (18.0 + Math.sqrt(30.0)) / 36.0, (18.0 + Math.sqrt(30.0)) / 36.0, (18.0 - Math.sqrt(30.0)) / 36.0,};
 
-            this.integrationPointsXi[0] = -Math.sqrt(3.0 / 7.0 + (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
-            this.integrationPointsXi[1] = -Math.sqrt(3.0 / 7.0 - (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
-            this.integrationPointsXi[2] = Math.sqrt(3.0 / 7.0 - (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
-            this.integrationPointsXi[3] = Math.sqrt(3.0 / 7.0 + (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
+            this.integrationPointsXi[0] = -Math.sqrt(3.0 / 7.0 + (2.0 / 7.0) * Math.sqrt(6.0 / 5.0));
+            this.integrationPointsXi[1] = -Math.sqrt(3.0 / 7.0 - (2.0 / 7.0) * Math.sqrt(6.0 / 5.0));
+            this.integrationPointsXi[2] = Math.sqrt(3.0 / 7.0 - (2.0 / 7.0) * Math.sqrt(6.0 / 5.0));
+            this.integrationPointsXi[3] = Math.sqrt(3.0 / 7.0 + (2.0 / 7.0) * Math.sqrt(6.0 / 5.0));
 
-            this.integrationPointsEta[0] = -Math.sqrt(3.0 / 7.0 + (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
-            this.integrationPointsEta[1] = -Math.sqrt(3.0 / 7.0 - (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
-            this.integrationPointsEta[2] = Math.sqrt(3.0 / 7.0 - (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
-            this.integrationPointsEta[3] = Math.sqrt(3.0 / 7.0 + (2.0  / 7.0) * Math.sqrt(6.0 / 5.0));
+            this.integrationPointsEta[0] = -Math.sqrt(3.0 / 7.0 + (2.0 / 7.0) * Math.sqrt(6.0 / 5.0));
+            this.integrationPointsEta[1] = -Math.sqrt(3.0 / 7.0 - (2.0 / 7.0) * Math.sqrt(6.0 / 5.0));
+            this.integrationPointsEta[2] = Math.sqrt(3.0 / 7.0 - (2.0 / 7.0) * Math.sqrt(6.0 / 5.0));
+            this.integrationPointsEta[3] = Math.sqrt(3.0 / 7.0 + (2.0 / 7.0) * Math.sqrt(6.0 / 5.0));
         }
 
 
@@ -130,34 +130,29 @@ public class MatrixBoundaryConditions {
         this.N = new double[numberOfIntegrationPoints][4];
 
         for (int i = 0; i < this.numberOfIntegrationPoints; i++) {
-            this.N[i][0] = 0.25 * (1 - integrationPointsEta[i]) * (1 - integrationPointsXi[i]);
-            this.N[i][1] = 0.25 * (1 + integrationPointsEta[i]) * (1 - integrationPointsXi[i]);
-            this.N[i][2] = 0.25 * (1 + integrationPointsEta[i]) * (1 + integrationPointsXi[i]);
-            this.N[i][3] = 0.25 * (1 - integrationPointsEta[i]) * (1 + integrationPointsXi[i]);
+            this.N[i][0] = 0.25 * (1 - integrationPointsXi[i]) * (1 - integrationPointsEta[i]);
+            this.N[i][1] = 0.25 * (1 + integrationPointsXi[i]) * (1 - integrationPointsEta[i]);
+            this.N[i][2] = 0.25 * (1 + integrationPointsXi[i]) * (1 + integrationPointsEta[i]);
+            this.N[i][3] = 0.25 * (1 - integrationPointsXi[i]) * (1 + integrationPointsEta[i]);
         }
-
-
-
     }
 
-    private void calculateBCMatrix() {
+    private void calculateVectorP() {
 
         for (int i = 0; i < this.numberOfIntegrationPoints; i++) {
-            double[][] componentOfBCMatrix = new double[4][4];
+            double[][] componentOfVectorP = new double[1][4];
 
             double[][] NVectorForCurrentIntegrationPoint = MatrixOperations.getRowAsHorizontalVectorFromMatrix(this.N, i);
-            double[][] NT = MatrixOperations.transposeVector(NVectorForCurrentIntegrationPoint);
-            double[][] N_NT = MatrixOperations.multiplyMatrices(NT, NVectorForCurrentIntegrationPoint);
 
-            componentOfBCMatrix = MatrixOperations.multiplyMatrixByConstant(N_NT, this.alfa * this.weightsOfIntegrationPoints[i] * this.currentSideLength / 2.0);
+            componentOfVectorP = MatrixOperations.multiplyMatrixByConstant(NVectorForCurrentIntegrationPoint, -1 * this.alfa * this.weightsOfIntegrationPoints[i] * (this.currentSideLength / 2.0) * this.tAlfa);
 
-            this.BCMatrix = MatrixOperations.sumMatrices(this.BCMatrix, componentOfBCMatrix);
+            this.vectorP = MatrixOperations.sumMatrices(this.vectorP, componentOfVectorP);
         }
 
     }
 
-    public double[][] getBCMatrix() {
-        return BCMatrix;
+    public double[][] getVectorP() {
+        return vectorP;
     }
 
     private void calculateDistanceBetweenPoints(Node n1, Node n2) {
@@ -168,4 +163,5 @@ public class MatrixBoundaryConditions {
 
         this.currentSideLength = Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
     }
+
 }

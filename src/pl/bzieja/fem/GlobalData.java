@@ -16,13 +16,16 @@ public class GlobalData {
     private final double ro;        //8
     private final double alfa;      //9
     private final double tAlfa;     //10
-
+    private double [][] initTemperature; //11
+    private double simulationTime;     //12
+    private double simulationStep;     //13
 
     private final int numberOfNodes;
     private final int numberOfElements;
 
     public GlobalData(String pathToFile) {
-        int numberOfVariablesToRead = 10;
+        int numberOfVariablesToRead = 13;
+
         double[] inputData = new double[numberOfVariablesToRead];
 
         try (Scanner reader = new Scanner(new File(pathToFile))) {
@@ -42,6 +45,14 @@ public class GlobalData {
         this.ro = inputData[7];
         this.alfa = inputData[8];
         this.tAlfa = inputData[9];
+        double initTemperature = inputData[10];
+        this.initTemperature = new double[1][numberOfNodesAtHeight * numberOfNodesAtWidth];
+        for (int i = 0; i < this.initTemperature[0].length; i++) {
+            this.initTemperature[0][i] = initTemperature;
+        }
+
+        this.simulationTime = inputData[11];
+        this.simulationStep = inputData[12];
 
         this.numberOfNodes = numberOfNodesAtHeight * numberOfNodesAtWidth;
         this.numberOfElements = (numberOfNodesAtHeight - 1) * (numberOfNodesAtWidth - 1);
@@ -93,5 +104,17 @@ public class GlobalData {
 
     public double gettAlfa() {
         return tAlfa;
+    }
+
+    public double[][] getInitTemperature() {
+        return initTemperature;
+    }
+
+    public double getSimulationTime() {
+        return simulationTime;
+    }
+
+    public double getSimulationStep() {
+        return simulationStep;
     }
 }

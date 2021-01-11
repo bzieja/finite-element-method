@@ -1,4 +1,4 @@
-package pl.bzieja.fem;
+package pl.bzieja.fem.applogic;
 
 import pl.bzieja.fem.gridlogic.Element;
 

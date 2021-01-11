@@ -1,5 +1,6 @@
 package pl.bzieja.fem;
 
+import pl.bzieja.fem.applogic.UniversalElement;
 import pl.bzieja.fem.gridlogic.Grid;
 
 public class Main {
@@ -12,8 +13,14 @@ public class Main {
         UniversalElement universalElement = new UniversalElement(globalData.getNumberOfIntegrationPoints());
 
         SOE soe = new SOE(grid, globalData, universalElement);
+        soe.startSimulation();
         soe.printMatrixHGlobal();
         soe.printMatrixCGlobal();
+        soe.printPGlobal();
+
+
+
+
 
         /////////// debug for given point ////////////
         /*

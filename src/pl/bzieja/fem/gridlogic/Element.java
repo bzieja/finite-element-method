@@ -4,7 +4,7 @@ import pl.bzieja.fem.gridlogic.Node;
 
 public class Element {
     private Node[] ID; // Nodes included in finite Element
-    private double[][] matrixH;
+    private double[][] matrixH; //(H + HBC)
     private double[][] matrixC;
     private double[][] matrixBC;    //for debug, can be omitted
     private double[][] vectorP;

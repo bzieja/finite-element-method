@@ -1,9 +1,12 @@
 package pl.bzieja.fem;
 
+import pl.bzieja.fem.applogic.*;
 import pl.bzieja.fem.gridlogic.Grid;
+import pl.bzieja.fem.mathlogic.EquationsSolver;
 import pl.bzieja.fem.mathlogic.MatrixOperations;
 
-import java.util.Arrays;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class SOE {
     //H_GLOBAL [n x n], where n = nH * nW
@@ -18,17 +21,43 @@ public class SOE {
     GlobalData globalData;
     UniversalElement universalElement;
 
-    public SOE(Grid grid, GlobalData globalData, UniversalElement universalElement)  {
+    public SOE(Grid grid, GlobalData globalData, UniversalElement universalElement) {
         this.grid = grid;
         this.globalData = globalData;
         this.universalElement = universalElement;
         this.matrixHGlobal = new double[globalData.getNumberOfNodes()][globalData.getNumberOfNodes()];
         this.matrixCGlobal = new double[globalData.getNumberOfNodes()][globalData.getNumberOfNodes()];
         this.vectorPGlobal = new double[1][globalData.getNumberOfNodes()];
+    }
 
-        calculateMatrixHGlobal();
-        calculateMatrixCGlobal();
-        calculateVectorPGlobal();
+    public void startSimulation() {
+
+        double[][] t0 = globalData.getInitTemperature();
+
+        for (double elapsedTime = 0.0; elapsedTime < globalData.getSimulationTime(); elapsedTime += globalData.getSimulationStep()) {
+            calculateMatrixHGlobal();
+            calculateMatrixCGlobal();
+            calculateVectorPGlobal();
+
+            //zastepcza macierz H
+            double[][] H_ = MatrixOperations.sumMatrices(matrixHGlobal, MatrixOperations.multiplyMatrixByConstant(matrixCGlobal, 1.0 / globalData.getSimulationStep()));
+
+            //zastepczy wektor P
+            double[][] P_ = MatrixOperations.multiplyMatrices(t0, MatrixOperations.multiplyMatrixByConstant(matrixCGlobal, -1.0 / globalData.getSimulationStep()));
+            P_ = MatrixOperations.sumMatrices(P_, vectorPGlobal);
+            P_ = MatrixOperations.multiplyMatrixByConstant(P_, -1.0);
+
+            EquationsSolver equationsSolver = new EquationsSolver(H_, P_);
+            t0 = equationsSolver.getX();
+
+
+            DoubleSummaryStatistics stats = Arrays.stream(t0).flatMapToDouble(Arrays::stream).boxed().collect(Collectors.summarizingDouble(Double::doubleValue));
+            double maxTemp = stats.getMax();
+            double minTemp = stats.getMin();
+
+            System.out.println("Time: " + (elapsedTime + globalData.getSimulationStep()) + "\tMinTemp: " + minTemp + "\tMaxTemp: " + maxTemp) ;
+        }
+
     }
 
     private void calculateMatrixHGlobal() {
@@ -39,13 +68,12 @@ public class SOE {
             MatrixH matrixH = new MatrixH(jacobian, universalElement, globalData.getK());
             grid.getElements()[i].setMatrixH(matrixH.getLocalMatrixH());
 
-            //check if Element has BC and if yes - count BC Matrix
+            //check if Element has BC and if yes - calculate BC Matrix
             if (grid.getElements()[i].isBoundaryElement()) {
                 MatrixBoundaryConditions matrixBoundaryConditions = new MatrixBoundaryConditions(grid.getElements()[i], universalElement, globalData.getAlfa());
                 grid.getElements()[i].setMatrixBC(matrixBoundaryConditions.getBCMatrix());
                 grid.getElements()[i].setMatrixH(MatrixOperations.sumMatrices(matrixH.getLocalMatrixH(), grid.getElements()[i].getMatrixBC()));
             }
-
         }
 
         //aggregation
@@ -56,6 +84,7 @@ public class SOE {
                 }
             }
         }
+
     }
 
     private void calculateMatrixCGlobal() {
@@ -89,16 +118,15 @@ public class SOE {
 
                 grid.getElements()[i].setVectorP(vectorP.getVectorP());
 
-                System.out.println("Element " + i + "ma vector P: " + Arrays.deepToString(grid.getElements()[i].getVectorP()));
+                //System.out.println("Element " + i + "ma vector P: " + Arrays.deepToString(grid.getElements()[i].getVectorP()));
             }
         }
 
-        //aggregation - MAYBE HERE BLAD
         for (int k = 0; k < globalData.getNumberOfElements(); k++) {
             //for (int i = 0; i < 4; i++) {
-                for (int j = 0; j < 4; j++) {
-                    vectorPGlobal[0][grid.getElements()[k].getID()[j].getNodeID() - 1] += grid.getElements()[k].getVectorP()[0][j];
-                }
+            for (int j = 0; j < 4; j++) {
+                vectorPGlobal[0][grid.getElements()[k].getID()[j].getNodeID() - 1] += grid.getElements()[k].getVectorP()[0][j];
+            }
             //}
         }
     }
@@ -123,6 +151,11 @@ public class SOE {
             System.out.print("\n");
         }
         System.out.print("\n");
+    } //print for debug
+
+    public void printPGlobal() {
+        System.out.println("VectorP Global:");
+        System.out.println(Arrays.deepToString(vectorPGlobal));
     } //print for debug
 
 }

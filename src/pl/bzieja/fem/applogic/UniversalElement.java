@@ -1,4 +1,4 @@
-package pl.bzieja.fem;
+package pl.bzieja.fem.applogic;
 
 public class UniversalElement {
 
@@ -154,10 +154,10 @@ public class UniversalElement {
         int numberOfRowsInMatrix = numberOfIntegrationPoints * numberOfIntegrationPoints; //each integration point is a row
 
         for (int i = 0; i < numberOfRowsInMatrix; i++) {
-            N[i][0] = 0.25 * (1 - integrationPointsEta[i]) * (1 - integrationPointsXi[i]);
-            N[i][1] = 0.25 * (1 + integrationPointsEta[i]) * (1 - integrationPointsXi[i]);
-            N[i][2] = 0.25 * (1 + integrationPointsEta[i]) * (1 + integrationPointsXi[i]);
-            N[i][3] = 0.25 * (1 - integrationPointsEta[i]) * (1 + integrationPointsXi[i]);
+            this.N[i][0] = 0.25 * (1 - integrationPointsXi[i]) * (1 - integrationPointsEta[i]);
+            this.N[i][1] = 0.25 * (1 + integrationPointsXi[i]) * (1 - integrationPointsEta[i]);
+            this.N[i][2] = 0.25 * (1 + integrationPointsXi[i]) * (1 + integrationPointsEta[i]);
+            this.N[i][3] = 0.25 * (1 - integrationPointsXi[i]) * (1 + integrationPointsEta[i]);
         }
 
     }
