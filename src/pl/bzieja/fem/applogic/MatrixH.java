@@ -35,7 +35,6 @@ public class MatrixH {
                 + universalElement.getdNByDEta()[i][2] * jacobian.getInvertedJacobianMatrix()[i][1][1]);
             dNByDY[i][3] = (1 / jacobian.getJacobianDeterminantsMatrix()[i]) * (universalElement.getdNByDXi()[i][3] * jacobian.getInvertedJacobianMatrix()[i][1][0]
                 + universalElement.getdNByDEta()[i][3] * jacobian.getInvertedJacobianMatrix()[i][1][1]);
-
         }
 
         //calculate 4x4 H[i] Matrix for each integration point

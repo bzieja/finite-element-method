@@ -10,19 +10,15 @@ public class Main {
         GlobalData globalData = new GlobalData(pathToDataFile);
         Grid grid = new Grid(globalData);
 
-        UniversalElement universalElement = new UniversalElement(globalData.getNumberOfIntegrationPoints());
 
-        SOE soe = new SOE(grid, globalData, universalElement);
+        SOE soe = new SOE(grid, globalData);
         soe.startSimulation();
         soe.printMatrixHGlobal();
         soe.printMatrixCGlobal();
         soe.printPGlobal();
+    }
 
-
-
-
-
-        /////////// debug for given point ////////////
+    /////////// debug for given point ////////////
         /*
         int integrationPoints = 2;
         UniversalElement universalElement = new UniversalElement(integrationPoints);
@@ -30,6 +26,4 @@ public class Main {
         MatrixH matrixH = new MatrixH(jacobian, universalElement);
          */
 
-
-    }
 }

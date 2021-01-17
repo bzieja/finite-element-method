@@ -21,10 +21,10 @@ public class SOE {
     GlobalData globalData;
     UniversalElement universalElement;
 
-    public SOE(Grid grid, GlobalData globalData, UniversalElement universalElement) {
+    public SOE(Grid grid, GlobalData globalData) {
         this.grid = grid;
         this.globalData = globalData;
-        this.universalElement = universalElement;
+        this.universalElement = new UniversalElement(globalData.getNumberOfIntegrationPoints());
         this.matrixHGlobal = new double[globalData.getNumberOfNodes()][globalData.getNumberOfNodes()];
         this.matrixCGlobal = new double[globalData.getNumberOfNodes()][globalData.getNumberOfNodes()];
         this.vectorPGlobal = new double[1][globalData.getNumberOfNodes()];
@@ -40,10 +40,12 @@ public class SOE {
             calculateVectorPGlobal();
 
             //zastepcza macierz H
-            double[][] H_ = MatrixOperations.sumMatrices(matrixHGlobal, MatrixOperations.multiplyMatrixByConstant(matrixCGlobal, 1.0 / globalData.getSimulationStep()));
+            double[][] H_ = MatrixOperations.sumMatrices(matrixHGlobal, MatrixOperations.multiplyMatrixByConstant(matrixCGlobal,
+                    1.0 / globalData.getSimulationStep()));
 
             //zastepczy wektor P
-            double[][] P_ = MatrixOperations.multiplyMatrices(t0, MatrixOperations.multiplyMatrixByConstant(matrixCGlobal, -1.0 / globalData.getSimulationStep()));
+            double[][] P_ = MatrixOperations.multiplyMatrices(t0, MatrixOperations.multiplyMatrixByConstant(matrixCGlobal,
+                    -1.0 / globalData.getSimulationStep()));
             P_ = MatrixOperations.sumMatrices(P_, vectorPGlobal);
             P_ = MatrixOperations.multiplyMatrixByConstant(P_, -1.0);
 
@@ -51,13 +53,14 @@ public class SOE {
             t0 = equationsSolver.getX();
 
 
-            DoubleSummaryStatistics stats = Arrays.stream(t0).flatMapToDouble(Arrays::stream).boxed().collect(Collectors.summarizingDouble(Double::doubleValue));
+            DoubleSummaryStatistics stats = Arrays.stream(t0).flatMapToDouble(Arrays::stream)
+                    .boxed().collect(Collectors.summarizingDouble(Double::doubleValue));
             double maxTemp = stats.getMax();
             double minTemp = stats.getMin();
 
-            System.out.println("Time: " + (elapsedTime + globalData.getSimulationStep()) + "\tMinTemp: " + minTemp + "\tMaxTemp: " + maxTemp) ;
+            //System.out.println("Time: " + (elapsedTime + globalData.getSimulationStep()) + "\tMinTemp: " + minTemp + "\tMaxTemp: " + maxTemp);
+            System.out.println((elapsedTime + globalData.getSimulationStep()) + "," + minTemp + "," + maxTemp);
         }
-
     }
 
     private void calculateMatrixHGlobal() {
